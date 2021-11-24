@@ -32,10 +32,96 @@
 
   <!-- Text to display as company information on Preferences/Settings | Plugin page -->
   <vendor url="https://plugins.jetbrains.com">IntelliJ Platform SDK</vendor>
+  <!-- Declare the default resource location for localizing menu strings -->
+  <resource-bundle>messages.BasicActionsBundle</resource-bundle>
+
+  <actions>
+
+    <action id="demo.start" text="Start" class="com.example.demo.operable.action.StartAction"
+            icon="AllIcons.Actions.Execute"/>
+    <action id="demo.stop" text="Stop" class="com.example.demo.operable.action.StopAction"
+            icon="AllIcons.Actions.Suspend"/>
+    <action id="demo.restart" text="Restart" class="com.example.demo.operable.action.RestartAction"
+            icon="AllIcons.Actions.Restart"/>
+    <group id="demo.operations" text="Operate" description="start/stop/restart" class="com.example.demo.operable.action.OperableActionGroup" popup="true"
+           icon="AllIcons.General.Settings">
+      <reference ref="demo.start"/>
+      <reference ref="demo.stop"/>
+      <reference ref="demo.restart"/>
+    </group>
+
+    <!--
+      See https://plugins.jetbrains.com/docs/intellij/basic-action-system.html#registering-actions
+      for information about the elements and attributes used for actions and groups.
+
+      This <action> element adds a static menu item in first position of the Tools menu that shows PopupDialogAction.
+      Note this element has no text or description attributes because translations for them are given
+      by action-id in the resource-bundle.
+      An <override-text> element is also used for demonstration purposes to show alternate text and description strings
+      for this action's entries in the MainMenu. (Which includes the ToolsMenu. Try commenting out the override-text
+      element and see how the menu text changes.) The alternate text and description attributes do not
+      appear here because they are defined by action-id in the resource-bundle.
+    -->
+    <action id="org.intellij.sdk.action.PopupDialogAction" class="org.intellij.sdk.action.PopupDialogAction"
+            text="B" description="SDK action example"
+            icon="SdkIcons.Sdk_default_icon">
+      <override-text place="MainMenu" text="Pop Dialog Action"/>
+      <keyboard-shortcut first-keystroke="control alt A" second-keystroke="C" keymap="$default"/>
+      <mouse-shortcut keystroke="control button3 doubleClick" keymap="$default"/>
+    </action>
+    <action id="org.intellij.sdk.action.GroupPopDialogAction" class="org.intellij.sdk.action.PopupDialogAction"
+            text="A" description="SDK static grouped action example"
+            icon="SdkIcons.Sdk_default_icon">
+    </action>
+    <action id="org.intellij.sdk.action.CustomGroupedAction" text="C" class="org.intellij.sdk.action.PopupDialogAction"
+            icon="SdkIcons.Sdk_default_icon"/>
+    <!--
+      All of the following menu groups add the action PopupDialogAction to menus in different ways.
+      Note that even though these groups reuse the same action class, in each use the action ids are unique.
+
+      GroupedActions demonstrates declaring an action group using the default ActionGroup implementation provided by the
+      IntelliJ Platform framework. (Note the lack of a group "class" attribute.) GroupedActions gets inserted after
+      PopupDialogAction in the Tools menu. Because the group's implementation is default, it cannot impose
+      enable/disable conditions. Instead it must rely on the conditions imposed by the parent menu where it is inserted.
+      It declares one action in the group.
+    -->
+    <group id="org.intellij.sdk.action.GroupedActions"
+           text="Static Grouped Actions" description="SDK statically grouped action example"
+           popup="true" icon="SdkIcons.Sdk_default_icon">
+      <add-to-group group-id="ToolsMenu" anchor="after" relative-to-action="org.intellij.sdk.action.PopupDialogAction"/>
+      <reference ref="org.intellij.sdk.action.GroupPopDialogAction"/>
+      <reference ref="org.intellij.sdk.action.CustomGroupedAction"/>
+      <reference ref="org.intellij.sdk.action.PopupDialogAction"/>
+    </group>
+    <!--
+      CustomDefaultActionGroup demonstrates declaring an action group based on a ActionGroup class supplied by this
+      plugin. This group is to be inserted atop the Editor Popup Menu. It declares one action in the group.
+      The group and action implementations are internationalized, so their declarations do not use the text or
+      description attributes. Instead, the information is defined in the BasicActionsBundle.
+    -->
+    <group id="org.intellij.sdk.action.CustomDefaultActionGroup"
+           class="org.intellij.sdk.action.CustomDefaultActionGroup"
+           popup="true">
+      <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+      <reference ref="org.intellij.sdk.action.GroupPopDialogAction"/>
+      <reference ref="org.intellij.sdk.action.CustomGroupedAction"/>
+      <reference ref="org.intellij.sdk.action.PopupDialogAction"/>
+      <reference ref="org.intellij.sdk.action.GroupedActions"/>
+    </group>
+    <!--
+      DynamicActionGroup demonstrates declaring an action group without a static action declaration.
+      An action is added to the group programmatically in the DynamicActionGroup implementation.
+    -->
+    <group id="org.intellij.sdk.action.DynamicActionGroup" class="org.intellij.sdk.action.DynamicActionGroup"
+           popup="true" text="Dynamically Grouped Actions" description="SDK dynamically grouped action example"
+           icon="SdkIcons.Sdk_default_icon">
+      <add-to-group group-id="ToolsMenu" anchor="after" relative-to-action="org.intellij.sdk.action.GroupedActions"/>
+    </group>
+  </actions>
 
   <extensions defaultExtensionNs="com.intellij">
-    <toolWindow id="Sample Calendar" secondary="true" icon="AllIcons.General.Modified" anchor="right"
-                factoryClass="org.intellij.sdk.toolWindow.MyToolWindowFactory"/>
+    <toolWindow id="Azure Explorer" secondary="true" icon="AllIcons.General.Modified" anchor="right"
+                factoryClass="com.example.demo.AzureExplorerToolWindowFactory"/>
   </extensions>
 
 </idea-plugin>
